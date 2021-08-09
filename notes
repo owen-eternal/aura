@@ -1,0 +1,17 @@
+SPECIFICS
+
+Backend
+-create git repo
+-download dependencies
+-create basic mvc architecture
+-create dummy data in models file
+-create register/login routes
+-create validate routes
+-create register route logic
+-create login route logic
+-create panic alert route
+-create authenticate panic alert route
+-user permissions
+-create database
+
+Frontend
