@@ -1,3 +1,4 @@
+const pool = require("../db");
 const { check, validationResult } = require("express-validator");
 
 //validate inputs
@@ -10,15 +11,41 @@ const validateInputs = [
 
 //if there are errors after 
 //validation, raise an error
-function raiseValidatonError(req, res, next){
-    const err = validationResult(req)
+function raiseValidatonError(request, response, next){
+    const err = validationResult(request)
     if(!err.isEmpty()){
-        return res.status(400).json({errors : err.array()})
+        return response.status(400).json({errors : err.array()})
     }
+    next()
+};
+
+// upon registration check if the email 
+// provided is already in the database
+async function checkEmailExists(request, response, next){
+
+    // retrieve email
+    const email = request.body.email
+
+    // create qyery string
+    const query = {
+        text : 'SELECT email FROM service_user WHERE email = $1',
+        values: [email]
+    }
+
+    // fetch data
+    const queryObject = await pool.query(query);
+
+    // unpack the array
+    const user = queryObject.rows[0]
+
+    // if the user exists send a 403
+    if (user) return response.status(403).send('email already registered')
+
     next()
 };
 
 module.exports = {
     validateInputs, 
-    raiseValidatonError, 
+    raiseValidatonError,
+    checkEmailExists
 };
