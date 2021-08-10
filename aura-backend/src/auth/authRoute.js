@@ -1,14 +1,14 @@
+const pool = require('../db');
 const bcrypt = require('bcrypt');
-const { request, response } = require('express');
-const JWT = require('jsonwebtoken')
+const JWT = require('jsonwebtoken');
 const auth = require('express').Router();
-const pool = require('../db')
+const { raiseValidatonError, validateInputs } = require('../middleware/verifications');
 
 // Route for handling registration.
-auth.post('/register', async (request, response) => {
+auth.post('/register', validateInputs, raiseValidatonError, async (request, response) => {
    
     // retrieve data from request body
-    const { username, email, password, user_role } = request.body
+    const { username, email, password, user_role } = request.body;
 
     try{
 
@@ -41,42 +41,42 @@ auth.post('/register', async (request, response) => {
 auth.post('/login', async (req, res) => {
 
     // retrieve data from request body
-    const { email, password } = req.body
+    const { email, password } = req.body;
 
     try{
 
         // define the sql query.
-        const queryString = 'SELECT id, username, email, passwrd FROM service_user WHERE email = $1'
+        const queryString = 'SELECT id, username, email, passwrd FROM service_user WHERE email = $1';
         
         // receive Object from backend
-        const queryObject = await pool.query(queryString, [email])
+        const queryObject = await pool.query(queryString, [email]);
 
         // define a user object
-        const user = queryObject.rows[0]
+        const user = queryObject.rows[0];
 
         // compare client password vs database password
-        const isMatch = await bcrypt.compare(password, user.passwrd)
+        const isMatch = await bcrypt.compare(password, user.passwrd);
 
         // check if theres a match or not
-        if (!isMatch) return res.status(403).send('incorrect credentials')
+        if (!isMatch) return res.status(403).send('incorrect credentials');
 
         // define payload object
         const payload = {
             id : user.id,
             username : user.username
-        }
+        };
         
         // create untimed token
-        const token = await JWT.sign(payload, process.env.SECRET_KEY)
+        const token = await JWT.sign(payload, process.env.SECRET_KEY);
 
         // send token to frontend
-        return res.status(200).json({access_token : token})
-        
+        return res.status(200).json({access_token : token});
+
     // throw error
     }catch(error){
         res.status(403).send('incorrect credentials')
-        console.error(error)
+        console.error(error);
     }
-})
+});
 
 module.exports = auth
