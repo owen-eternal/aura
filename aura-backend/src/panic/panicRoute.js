@@ -1,17 +1,17 @@
 const { request, response } = require('express');
 
-const panic = require('express').Router();
+const alert = require('express').Router();
 
-panic.post('/create-alert', (request, response) =>{
+alert.post('/create', (request, response) =>{
     // must be authenticated and authorised  
     // to created an alert.
-    request.status(200).send('panic has been created')
+    response.status(200).json({payload: request.body})
 })
 
-panic.delete('/delete-alert/:id', (request, response)=>{
+alert.delete('/cancel/:id', (request, response) =>{
     // must be authenticated and authorised  
     // to created an alert.
-    response.status(201).send(`deleting alert ${request.params.id}`)
+    response.status(201).send(`Alert ${request.params.id} canceled`)
 })
 
-module.exports = panic
+module.exports = alert
