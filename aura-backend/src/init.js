@@ -1,7 +1,8 @@
 require('dotenv').config()
+const cors = require('cors')
 const Express = require('express')
 const auth = require('./auth/authRoute')
-const cors = require('cors')
+const panic = require('./panic/panicRoute')
 
 //creating an instance of our application
 //application factory pattern
@@ -16,6 +17,7 @@ function create_app(){
 
     //register auth route
     app.use('/api/v1/auth', auth)
+    app.use('/api/v1/panic', panic)
 
     return app
 }
