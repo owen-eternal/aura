@@ -1,17 +1,23 @@
 SPECIFICS
 
 Backend
--create git repo
--download dependencies
--create basic mvc architecture
--create dummy data in models file
--create register/login routes
--create validate routes
--create register route logic
--create login route logic
--create panic alert route
--create authenticate panic alert route
--user permissions
--create database
+-create git repo // DONE
+-download dependencies // DONE
+-create basic mvc architecture // PARTIALLY // ~ RETURN AFTER FRONTEND COMPLETED 
+-create dummy data in models file // DONE BUT NOT COMMITTED
+-create register/login routes // DONE
+-create validate routes // DONE
+-create register route logic // DONE
+-create login route logic // DONE
+-create panic alert route // ~ RETURN AFTER REACT USER PAGE ~
+-create authenticate panic alert route 
+-user permissions // ~ RETURN AFTER REACT USER PAGE ~
+-create database // DONE
 
 Frontend
+- download react
+- download dependencies
+- create registration page
+- create login page
+- create user page 
+- create admin page 
