@@ -40,7 +40,7 @@ async function checkEmailExists(request, response, next){
 
     // if the user exists send a 403
     if (user) return response.status(403).send('email already registered')
-
+    
     next()
 };
 
