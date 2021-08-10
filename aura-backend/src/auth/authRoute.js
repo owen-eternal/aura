@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { request, response } = require('express');
 const JWT = require('jsonwebtoken')
 const auth = require('express').Router();
 const pool = require('../db')
@@ -21,10 +22,12 @@ auth.post('/register', async (request, response) => {
         }
 
         // save the data and return only id and username.
-        const user = await pool.query(query);
+        const queryObject = await pool.query(query);
+
+        const user = queryObject.rows[0]
 
         // sign the id and username and return a access token.
-        const token = await JWT.sign(user.rows.pop(), process.env.SECRET_KEY);
+        const token = await JWT.sign(user, process.env.SECRET_KEY);
 
         return response.status(200).json({access_token: token});
     
@@ -32,6 +35,39 @@ auth.post('/register', async (request, response) => {
     // or the database instance or the jwt 
     }catch(error){ console.error(error)}
 
+})
+
+// Route for handling log-ins.
+auth.post('/login', async (req, res) => {
+
+    const { email, password } = req.body
+
+    try{
+
+        // define the sql query.
+        const queryString = 'SELECT id, username, email, passwrd FROM service_user WHERE email = $1'
+
+        const queryObject = await pool.query(queryString, [email])
+
+        const user = queryObject.rows[0]
+
+        const isMatch = await bcrypt.compare(password, user.passwrd)
+
+        if (!isMatch) return res.status(403).send('incorrect credentials')
+
+        const payload = {
+            id : user.id,
+            username : user.username
+        }
+        
+        const token = await JWT.sign(payload, process.env.SECRET_KEY)
+
+        return res.status(200).json({access_token : token})
+        
+    }catch(error){
+        res.status(403).send('incorrect credentials')
+        console.error(error)
+    }
 })
 
 module.exports = auth
