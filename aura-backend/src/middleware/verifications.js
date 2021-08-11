@@ -49,9 +49,11 @@ async function checkEmailExists(request, response, next){
 //add user into the session.
 async function loadUser(request, response, next){
 
-    const token = request.headers.authorization.split(' ')[1]
+    const autHeader = request.headers.authorization
 
-    if (token){
+    if (autHeader){
+
+        const token = autHeader.split(' ')[1]
 
         try{
             const user = await JWT.verify(token, process.env.SECRET_KEY)

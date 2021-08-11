@@ -3,7 +3,7 @@ function loginRequired(request, response, next ){
 
     if(request.user == null){
 
-        return request.status(403).send("You need to sign in first")
+        return response.status(403).send("You need to sign in first")
     }
 
     next()
@@ -13,8 +13,10 @@ function loginRequired(request, response, next ){
 function userRole(role){
 
     return (request, response, next) => {
+    
+        userRole = request.user.rows[0].user_role
 
-        if (request.user.role !== role){
+        if (userRole !== role){
 
             return response.status(401).send("You cannot access this page")
         }
