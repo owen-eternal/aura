@@ -1,5 +1,7 @@
 const pool = require("../db");
-const { check, validationResult } = require("express-validator");
+const JWT = require('jsonwebtoken')
+const { check, validationResult, query } = require("express-validator");
+
 
 //validate inputs
 const validateInputs = [
@@ -44,8 +46,28 @@ async function checkEmailExists(request, response, next){
     next()
 };
 
+//add user into the session.
+async function loadUser(request, response, next){
+
+    const token = request.headers.authorization.split(' ')[1]
+
+    if (token){
+
+        try{
+            const user = await JWT.verify(token, process.env.SECRET_KEY)
+
+            const queryString = 'SELECT * FROM service_user WHERE id = $1';
+        
+            request.user = await pool.query(queryString, [parseInt(user.id)]);
+
+        }catch(error){ console.error('invalid signature')}
+    } 
+    next()
+}
+
 module.exports = {
     validateInputs, 
     raiseValidatonError,
-    checkEmailExists
+    checkEmailExists,
+    loadUser
 };
