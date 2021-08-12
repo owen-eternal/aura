@@ -37,7 +37,15 @@ user.delete('/cancel-alert/:id', userRole('basic'), checkAlertExists, allowedToD
 
         return response.status(200).send('Your alert has been cancelled');
 
-    }catch(err){console.error()}
+    }
+    catch(err){
+        
+        console.error()
+    }
+    finally{
+
+        await pool.end()
+    }
 })
 
 module.exports = user

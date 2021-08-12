@@ -84,7 +84,15 @@ async function checkAlertExists(request, response, next){
     
         if (request.alert == null) return response.status(404).send('Alert has been cancelled or it does not exist')
 
-    }catch(error){console.error(error)}
+    }
+    catch(error){
+ 
+        console.error(error)
+    }
+    finally{ 
+        
+        await pool.end()
+    }
 
     next()
 } 
