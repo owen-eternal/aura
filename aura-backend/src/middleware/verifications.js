@@ -1,6 +1,6 @@
 const pool = require("../db");
 const JWT = require('jsonwebtoken')
-const { check, validationResult, query } = require("express-validator");
+const { check, validationResult } = require("express-validator");
 
 
 //validate inputs
@@ -46,7 +46,7 @@ async function checkEmailExists(request, response, next){
     next()
 };
 
-//add user into the session.
+// add user into the session.
 async function loadUser(request, response, next){
 
     const autHeader = request.headers.authorization
@@ -59,17 +59,40 @@ async function loadUser(request, response, next){
             const user = await JWT.verify(token, process.env.SECRET_KEY)
 
             const queryString = 'SELECT * FROM service_user WHERE id = $1';
+
+            const userData = await pool.query(queryString, [parseInt(user.id)]);
         
-            request.user = await pool.query(queryString, [parseInt(user.id)]);
+            request.user = userData.rows[0]
 
         }catch(error){ console.error('invalid signature')}
     } 
     next()
 }
 
+// check if the email exists
+async function checkAlertExists(request, response, next){
+
+    try{
+
+        const alertId = parseInt(request.params.id)
+
+        const query = "SELECT * FROM service_alert WHERE id = $1"
+
+        const alert = await pool.query(query, [alertId])
+    
+        request.alert  = alert.rows[0]
+    
+        if (request.alert == null) return response.status(404).send('Alert has been cancelled or it does not exist')
+
+    }catch(error){console.error(error)}
+
+    next()
+} 
+
 module.exports = {
     validateInputs, 
     raiseValidatonError,
     checkEmailExists,
-    loadUser
+    loadUser,
+    checkAlertExists
 };
