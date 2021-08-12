@@ -1,1 +1,1 @@
-web: node aura-backend/server.js
+web: node server.js
