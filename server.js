@@ -5,6 +5,4 @@ app = create_app()
 
 const PORT = process.env.SERVER_PORT
 
-app.listen(PORT, ()=>{
-    console.log(`listening at port: http://localhost:${PORT}/`)
-})
+app.listen(PORT)
