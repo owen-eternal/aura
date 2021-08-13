@@ -16,4 +16,4 @@ CREATE TABLE service_alert (
     user_id BIGINT NOT NULL REFERENCES service_user (id)
 );
 
-INSERT INTO service_user (username, email, passwrd, user_role) VALUES ('admin', 'admin@gmail.com', 'rootroot', 'admin');
+INSERT INTO service_user (username, email, passwrd, user_role) VALUES ('admin', 'admin@gmail.com', '$2b$10$AFpEQjyqPpP4FIZiBjaPHOSst9R.eA73uZiWVoakiIEy/YmCVfbUy', 'admin' );

@@ -21,6 +21,8 @@ auth.post('/register',
                 // reegistering as basic user
                 if (!user_role){
 
+                    console.log('is user')
+
                     const query = {
                     
                         text : 'INSERT INTO service_user (username, email, passwrd) VALUES ($1, $2, $3) RETURNING id, username',
@@ -35,6 +37,8 @@ auth.post('/register',
                 }
 
                 // else register as admin user
+
+                console.log('is admin')
 
                 const query = {
                     

@@ -72,7 +72,11 @@ async function loadUser(request, response, next){
 // check if the email exists
 async function checkAlertExists(request, response, next){
 
+    console.log('email validation')
+
     try{
+
+        console.log('inside try block')
 
         const alertId = parseInt(request.params.id)
 
