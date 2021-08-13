@@ -77,6 +77,8 @@ auth.post('/login', async (req, res) => {
         
         // receive Object from backend
         const queryObject = await pool.query(queryString, [email]);
+
+        console.log(queryObject)
         
 
         // define a user object
