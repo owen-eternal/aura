@@ -15,3 +15,5 @@ CREATE TABLE service_alert (
     alert_date DATE NOT NULL DEFAULT CURRENT_DATE,
     user_id BIGINT NOT NULL REFERENCES service_user (id)
 );
+
+INSERT INTO service_user (username, email, passwrd, user_role) VALUES ('admin', 'admin@gmail.com', 'rootroot', 'admin');

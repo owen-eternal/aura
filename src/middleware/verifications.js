@@ -89,10 +89,6 @@ async function checkAlertExists(request, response, next){
  
         console.error(error)
     }
-    finally{ 
-        
-        await pool.end()
-    }
 
     next()
 } 

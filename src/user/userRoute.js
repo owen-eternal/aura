@@ -42,10 +42,6 @@ user.delete('/cancel-alert/:id', userRole('basic'), checkAlertExists, allowedToD
         
         console.error()
     }
-    finally{
-
-        await pool.end()
-    }
 })
 
 module.exports = user

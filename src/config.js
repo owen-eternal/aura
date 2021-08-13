@@ -1,9 +1,13 @@
-const env = process.env.NODE_ENV
+const os = require('os')
 
-const dev = {
+const env = process.env.NODE_ENV
+const address = os.networkInterfaces().lo[0].address
+
+const development = {
 
     app:{
-        port: 3000
+        address: address,
+        port: 8000
     },
 
     db:{
@@ -19,9 +23,10 @@ const dev = {
     }
 }
 
-const prod = {
+const production = {
 
     app:{
+        address: address,
         port: process.env.PORT
     },
 
@@ -35,7 +40,8 @@ const prod = {
 }
 
 const config = {
-    dev,
+    development,
+    production
 }
 
 module.exports = config[env]
