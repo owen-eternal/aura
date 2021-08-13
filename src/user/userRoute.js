@@ -33,6 +33,8 @@ user.delete('/cancel-alert/:id', userRole('basic'), checkAlertExists, allowedToD
 
         alertId = parseInt(request.alert.id)
 
+        console.log(alertId)
+
         await pool.query("DELETE FROM service_alert WHERE id = $1", [alertId]);
 
         return response.status(200).send('Your alert has been cancelled');
