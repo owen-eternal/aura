@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const JWT = require('jsonwebtoken');
 const auth = require('express').Router();
 const { raiseValidatonError, validateInputs, checkEmailExists } = require('../middleware/verifications');
+const { response } = require('express');
 
 // Route for handling registration.
 auth.post('/register',  
@@ -78,7 +79,7 @@ auth.post('/login', async (req, res) => {
         // receive Object from backend
         const queryObject = await pool.query(queryString, [email]);
 
-        console.log(queryObject)
+        response.send(queryObject)
         
 
         // define a user object
