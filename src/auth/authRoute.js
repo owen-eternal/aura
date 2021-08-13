@@ -113,8 +113,12 @@ const auth = require('express').Router();
 // });
 
 auth.get('/check', async (req, res) =>{
-    const allData = await pool.query('SELECT * FROM service_user')
-    res.send(allData.rows)
+    try{
+        const allData = await pool.query('SELECT * FROM service_user')
+        res.send(allData.rows)
+    }catch(e){
+        console.error(e)
+    }
 })
 
 module.exports = auth
