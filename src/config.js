@@ -32,7 +32,9 @@ const production = {
 
     db: {
         connectionString: process.env.DATABASE_URI,
-        ssl=true
+        ssl: {
+            rejectUnauthorized: false
+        }
     },
 
     secrets:{
