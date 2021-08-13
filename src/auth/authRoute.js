@@ -68,6 +68,8 @@ auth.post('/login', async (req, res) => {
     // retrieve data from request body
     const { email, password } = req.body;
 
+    console.log(email)
+
     try{
 
         // define the sql query.
