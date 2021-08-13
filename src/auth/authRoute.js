@@ -13,6 +13,8 @@ auth.post('/register',
             // retrieve data from request body
             const { username, email, password, user_role } = request.body;
 
+            console.log(email)
+
             try{
 
                 // Hash password.
