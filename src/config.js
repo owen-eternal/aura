@@ -31,7 +31,7 @@ const production = {
     },
 
     db: {
-        connectionString: process.env.DATABASE_URl,
+        connectionString: process.env.DATABASE_URL,
         ssl: {
             rejectUnauthorized: false
         }
