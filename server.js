@@ -4,8 +4,6 @@ const config = require('./src/config')
 
 app = create_app()
 
-console.log(config.db)
-
 app.listen(config.app.port, ()=>{
     console.log(`running a '${process.env.NODE_ENV}' enviromnent`)
     console.log(`running server on http://${config.app.address}:${config.app.port}/`)
