@@ -1,0 +1,145 @@
+swagger: "2.0"
+info:
+    title: Aura Alert
+    description: This is a panic alert button that helps user
+    version: 1.0
+    contact:
+        email: olwethuphakade89@gmail.com
+    license: 
+        name: Apache 2.0
+    servers:
+        -url: "http:localhost:8000/"
+        description: "This is a local server"
+
+schemes: [http, https]
+
+#Register a user |
+
+paths:
+    /api/v1/auth/register:
+        post:
+            summary: Register User
+            description: An endpoint that registers a user and returns an access token.   
+            produces:
+                - application/json
+            consumes: 
+                - application/json
+            parameters:
+            - in : body
+              name: Sign-up
+              schema:
+                type: object
+                properties:
+                    username:
+                        type: string
+                        nullable: false
+                    email:
+                        type: string
+                        nullable: false
+                        format: email
+                    password:
+                        type: string
+                        nullable: false
+            responses:
+                200:
+                    description: You have been registered as "YOUR ROLE", you can now login.
+
+#login a user |
+
+    /api/v1/auth/login:
+        post:
+            summary: Login user
+            description: User must first authenticate before accessing the Alert API
+            consumes:
+                - application/json
+            produces:
+                - application/json
+            parameters:
+            - in: body
+              name: sign-in
+              schema:
+                type: object
+                properties:
+                    email:
+                        type: string
+                        format: email
+                        nullable: false
+                    password:
+                        type: string
+                        format: password
+                        nullable: false
+                
+            responses:
+                200:
+                    schema:
+                        type: object
+                        properties:
+                            x-token:
+                                type: string
+                403:
+                    description: Invalid credential
+
+# create an alert
+
+    /api/v1/user/create-alert:
+        post:
+            summary: (user role) Create an alert
+            description: An authenticated user can send an alert.
+            consumes:
+                - application/json
+            produces:
+                - application/json
+            parameters:
+            - in: body
+              name: Create alert
+              schema: 
+                type: object
+                properties:
+                    location:
+                        type: string
+                    status:
+                        type: string
+            responses:
+                200:
+                    schema:
+                        type: string
+                401:
+                    description: Not authenticated
+                403:
+                    description: Access token does not have the required scope
+    
+    /api/v1/user/cancel-alert:
+        post:
+            summary: (user role) Cancel an alert
+
+    /api/v1/admin/fetch-all-alerts:
+        get:
+            summary: (dmin role) fetch a list of alerts.
+
+            responses:
+                200:
+                    description: OK
+                401:
+                    description: Not authenticated
+                403:
+                    description: Access token does not have the required scope
+
+
+
+    
+        
+
+
+
+
+
+
+
+    
+   
+      
+
+
+    
+
+

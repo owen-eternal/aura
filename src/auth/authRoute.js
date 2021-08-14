@@ -4,7 +4,7 @@ const JWT = require('jsonwebtoken');
 const auth = require('express').Router();
 const { raiseValidatonError, validateInputs, checkEmailExists } = require('../middleware/verifications');
 
-// Route for handling registration.
+
 auth.post('/register',  
         validateInputs, 
         raiseValidatonError, 
@@ -54,7 +54,7 @@ auth.post('/register',
 
         })
 
-// Route for handling log-ins.
+
 auth.post('/login', async (req, res) => {
 
     // retrieve data from request body
@@ -87,13 +87,13 @@ auth.post('/login', async (req, res) => {
         const token = await JWT.sign(payload, process.env.SECRET_KEY);
 
         // send token to frontend
-        return res.status(200).json({yaccess_token : token});
+        return res.status(200).json({access_token : token});
 
     // throw error
     }
     catch(error){
 
-        res.status(403).send('incorrect credentials')
+        // res.status(403).send('incorrect credentials')
         
         console.error(error);
     }
