@@ -108,7 +108,7 @@ paths:
                                 status:
                                     type: string
                         example:
-                            location: Midrand noordwyk
+                            geolocation: Midrand noordwyk
                             status: critical
             responses:
                 201:
@@ -117,7 +117,7 @@ paths:
                         application/json:
                             example:
                                 id: 1
-                                location: Midrand noordwyk
+                                geolocation: Midrand noordwyk
                                 status: critical
                                 alert_date: "2021-08-14T22:00:00.000Z"
                                 user_id: 55
