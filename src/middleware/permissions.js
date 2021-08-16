@@ -3,7 +3,7 @@ function loginRequired(request, response, next ){
 
     if(request.user == null){
 
-        return response.status(403).send("You need to sign in first")
+        return response.status(401).send("Unauthorized user. You need to sign in.")
     }
 
     next()
@@ -18,7 +18,7 @@ function userRole(role){
 
         if (userRole !== role){
 
-            return response.status(401).send("You cannot access this page")
+            return response.status(403).send("Access denied.")
         }
 
         next()
@@ -35,7 +35,7 @@ function allowedToDelete(request, response, next) {
     //check to see of they are the same person
     if (userId !== userAlertId){
 
-        return response.status(401).send("You do not have permission to access this page")
+        return response.status(403).send("Access denied.")
     }
 
     next()

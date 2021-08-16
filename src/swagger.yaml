@@ -1,8 +1,8 @@
-swagger: "2.0"
+openapi: "3.0.0"
 info:
     title: Aura Alert
-    description: This is a panic alert button that helps user
-    version: 1.0
+    description: Emergancy service that allows its users to send a panic alert from anywhere around the world.
+    version: 1.0.0
     contact:
         email: olwethuphakade89@gmail.com
     license: 
@@ -13,116 +13,166 @@ info:
 
 schemes: [http, https]
 
+
+components:
+  securitySchemes:
+    bearerAuth:          
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+
 #Register a user |
 
 paths:
     /api/v1/auth/register:
-        post:
-            summary: Register User
-            description: An endpoint that registers a user and returns an access token.   
-            produces:
-                - application/json
-            consumes: 
-                - application/json
-            parameters:
-            - in : body
-              name: Sign-up
-              schema:
-                type: object
-                properties:
-                    username:
-                        type: string
-                        nullable: false
-                    email:
-                        type: string
-                        nullable: false
-                        format: email
-                    password:
-                        type: string
-                        nullable: false
+        post: 
+            summary: Sign-up a user
+            tags: [Authentication]
+            requestBody:
+                description: An endpoint that signs in a user and returns an access token. Use the bearer token to access either the user or admin defined roles.  
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                email:
+                                    type: string
+                                password:
+                                    type: string            
+                        example:
+                            username: yourusername
+                            email: your@gmail.com
+                            password: YourPassWord
             responses:
-                200:
-                    description: You have been registered as "YOUR ROLE", you can now login.
+                201:
+                    description: User created.
+                403:
+                    description: Email already registered.
+                500:
+                    description: Internal server error.
 
 #login a user |
 
     /api/v1/auth/login:
         post:
-            summary: Login user
-            description: User must first authenticate before accessing the Alert API
-            consumes:
-                - application/json
-            produces:
-                - application/json
-            parameters:
-            - in: body
-              name: sign-in
-              schema:
-                type: object
-                properties:
-                    email:
-                        type: string
-                        format: email
-                        nullable: false
-                    password:
-                        type: string
-                        format: password
-                        nullable: false
-                
+            summary: Sign-in a user.
+            tags: [Authentication]
+            requestBody:
+                description: An endpoint that signs in a user and returns an access token. Use the bearer token to access either the user or admin defined roles.  
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                email:
+                                    type: string
+                                password:
+                                    type: string
+                        example:
+                            email: your@gmail.com
+                            password: YourPassWord
             responses:
-                200:
-                    schema:
-                        type: object
-                        properties:
-                            x-token:
-                                type: string
-                403:
-                    description: Invalid credential
+                201:
+                    description: returns access token for authenticating users.
+                    content:
+                        application/json:
+                            example:
+                                x-token: base64 access token
+
+                401:
+                    description: 'incorret credentials'
+    
 
 # create an alert
 
     /api/v1/user/create-alert:
         post:
-            summary: (user role) Create an alert
-            description: An authenticated user can send an alert.
-            consumes:
-                - application/json
-            produces:
-                - application/json
-            parameters:
-            - in: body
-              name: Create alert
-              schema: 
-                type: object
-                properties:
-                    location:
-                        type: string
-                    status:
-                        type: string
+            security:
+                - bearerAuth: []
+            summary: Create an alert
+            tags: [User roles]
+            requestBody:
+                description: Allows authenticated users to send a panic to our server. The location key describes the location of the incident and status, describes the severity.  
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                location:
+                                    type: string
+                                status:
+                                    type: string
+                        example:
+                            location: Midrand noordwyk
+                            status: critical
             responses:
-                200:
-                    schema:
-                        type: string
+                201:
+                    description: Returns an object describing the most recent panic request. 
+                    content:
+                        application/json:
+                            example:
+                                id: 1
+                                location: Midrand noordwyk
+                                status: critical
+                                alert_date: "2021-08-14T22:00:00.000Z"
+                                user_id: 55
+
                 401:
-                    description: Not authenticated
-                403:
-                    description: Access token does not have the required scope
+                    description: Unauthorized user. You need to sign in.
+                403: 
+                    description: Access denied.
+                500:
+                    description: internal server error.
     
-    /api/v1/user/cancel-alert:
-        post:
-            summary: (user role) Cancel an alert
+    /api/v1/user/cancel-alert/{id}:
+        delete:
+            security:
+                - bearerAuth: []
+            summary: Cancel an alert
+            tags: [User roles]
+            description: Allows authenticated users to delete a panic after it has been sent.
+            parameters:
+                - in: path
+                  name: id
+                  schema: 
+                    type: string
+                  required: true
+                  decription: The alert id.
+
+            responses:
+                204:
+                    description: Alert cancelled.
+                401:
+                    description: Unauthorized user. You need to sign in.
+                403: 
+                    description: Access denied.
+                404:
+                    description: Alert not found
+                500:
+                    description: internal server error.
 
     /api/v1/admin/fetch-all-alerts:
         get:
-            summary: (dmin role) fetch a list of alerts.
-
+            security:
+                - bearerAuth: []
+            summary: View all panic alerts.
+            tags: [Admin roles] 
+            description: Shows a list of all panic alerts. User has to be authenticated as admin to access this endpoint.
             responses:
                 200:
-                    description: OK
+                    description: Success.
                 401:
-                    description: Not authenticated
-                403:
-                    description: Access token does not have the required scope
+                    decription: Unauthorized user. You need to sign in.
+                403: 
+                    description: Access denied. 
+                500:
+                    description: internal server error.
+
 
 
 

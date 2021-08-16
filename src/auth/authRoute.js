@@ -30,7 +30,7 @@ auth.post('/register',
                     // save the data and return only id and username.
                     await pool.query(query);
 
-                    return response.status(201).send(`You have been registered as basic user, you can now login.`);
+                    return response.status(201).send(`User created.`);
 
                 }
 
@@ -44,7 +44,7 @@ auth.post('/register',
 
                 await pool.query(query);
 
-                return response.status(201).send(`You have been registered as ${user_role}, you can now login.`);
+                return response.status(201).send(`User created`);
             
             }
             catch(error){ 
@@ -75,7 +75,7 @@ auth.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.passwrd);
 
         // check if theres a match or not
-        if (!isMatch) return res.status(403).send('incorrect credentials');
+        if (!isMatch) return res.status(401).send('incorrect credentials');
 
         // define payload object
         const payload = {
@@ -87,13 +87,13 @@ auth.post('/login', async (req, res) => {
         const token = await JWT.sign(payload, process.env.SECRET_KEY);
 
         // send token to frontend
-        return res.status(200).json({access_token : token});
+        return res.status(201).json({access_token : token});
 
     // throw error
     }
     catch(error){
 
-        // res.status(403).send('incorrect credentials')
+        res.status(401).send('incorrect credentials')
         
         console.error(error);
     }

@@ -17,7 +17,7 @@ function create_app(){
     //inititiate application level middleware.
     app.use(cors());
     app.use(Express.json());
-    app.use('/', 
+    app.use('/api-docs', 
             swaggerUi.serve, 
             swaggerUi.setup(swaggerJsDocs))
    

@@ -14,15 +14,13 @@ user.post('/create-alert', userRole('basic'), async (request, response) =>{
 
         const { geolocation, status } = request.body
 
+        console.log(geolocation)
+
         const query = 'INSERT INTO service_alert (geolocation, stat, user_id) VALUES ($1, $2, $3) RETURNING *'
 
         const alert = await pool.query(query, [geolocation, status, userId])
 
-        return response.status(201).json(
-            {
-                message : "alert lodged on your behalf",
-                alert_details: alert.rows[0]
-        })
+        return response.status(201).json(alert.rows[0])
 
     }catch(error){console.log(error)}
 })

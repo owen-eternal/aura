@@ -82,7 +82,7 @@ async function checkAlertExists(request, response, next){
     
         request.alert  = alert.rows[0]
     
-        if (request.alert == null) return response.status(404).send('Alert has been cancelled or it does not exist')
+        if (request.alert == null) return response.status(404).send('Alert not found')
 
     }
     catch(error){
