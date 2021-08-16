@@ -87,7 +87,7 @@ auth.post('/login', async (req, res) => {
         const token = await JWT.sign(payload, process.env.SECRET_KEY);
 
         // send token to frontend
-        return res.status(201).json({access_token : token});
+        return res.status(201).json({"x-token" : token});
 
     // throw error
     }
